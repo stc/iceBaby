@@ -80,7 +80,11 @@ void draw()
     break;
 
   case 1:
+<<<<<<< HEAD
     println("Tutorial video started");
+=======
+    println("Tutorial video started"); 
+>>>>>>> 756528003ad97d2001b2137d43112023e25a1b46
     background(0);
     myTutorial.load();
     sequence = 2;
@@ -100,7 +104,11 @@ void draw()
     break;
     
   case 4:
+<<<<<<< HEAD
     fill(0,5); // do not refresh, slow fading out
+=======
+    fill(0,5);  //  do not refresh, slow fading out
+>>>>>>> 756528003ad97d2001b2137d43112023e25a1b46
     noStroke();
     rect(0,0,width,height);
     myDrawing.display();
@@ -118,10 +126,17 @@ void draw()
     {
       nodes[i] = new Node(i, sketchPath + "/data/" + photoPath + "/loosers/" + fileNames[i]);
     }
+<<<<<<< HEAD
     sequence = 6; // run only once, jump to next case
     break;
   
   case 6:
+=======
+    sequence = 6; //  run only once, jump to next case
+    break;
+  
+  case 6: 
+>>>>>>> 756528003ad97d2001b2137d43112023e25a1b46
     background(0);
     println("Display photo sphere");
     mySphere.display();
@@ -135,7 +150,11 @@ void draw()
     {
       myWinners.load(sketchPath + "/data/" + photoPath + "/winners/" + winnerfileNames[i]);
     }
+<<<<<<< HEAD
     sequence = 8; // run only once, jump to next case
+=======
+    sequence = 8; //  run only once, jump to next case
+>>>>>>> 756528003ad97d2001b2137d43112023e25a1b46
     break;
    
   case 8:
@@ -175,7 +194,11 @@ void oscEvent(OscMessage theOscMessage)
   if(theOscMessage.checkAddrPattern("/FACES_SAVED")==true)
   {
       oscData = theOscMessage.addrPattern();
+<<<<<<< HEAD
       sequence = 5; // display photoSphere
+=======
+      sequence = 5; //  display photoSphere
+>>>>>>> 756528003ad97d2001b2137d43112023e25a1b46
       println(oscData);
       
       String Value = theOscMessage.get(0).stringValue(); // get the third osc argument
@@ -196,3 +219,7 @@ void oscEvent(OscMessage theOscMessage)
       return;
  }
 }
+<<<<<<< HEAD
+=======
+
+>>>>>>> 756528003ad97d2001b2137d43112023e25a1b46

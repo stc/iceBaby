@@ -14,4 +14,8 @@ class Texts
     text("ÁBRAKORI JÁTÉK INDULÁSRA KÉSZ \n csatlakoztasd az osc-t, lépkedj a stációk között a \n fel/le nyíllal", width/2, height/2-100);
     textAlign(LEFT);
   }
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> 756528003ad97d2001b2137d43112023e25a1b46
