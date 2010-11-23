@@ -1,9 +1,9 @@
 //----------------------------------------------------------------------------------------------------------------
 //
 //
-//  ABRAKORI -- visual content
-//  stc@basilar.net
-//  2010
+// ABRAKORI -- visual content
+// stc@basilar.net
+// 2010
 //
 //
 //----------------------------------------------------------------------------------------------------------------
@@ -13,6 +13,7 @@ import javax.media.opengl.*;
 import TUIO.*;
 import oscP5.*;
 import netP5.*;
+import jmcvideo.*;
 
 TuioProcessing tuioClient;
 
@@ -20,6 +21,8 @@ Sphere mySphere;
 Drawing myDrawing;
 Winners myWinners;
 Diagram myDiagram;
+Texts myTexts;
+Tutorial myTutorial;
 
 OscP5 oscP5;
 NetAddress myRemoteLocation;
@@ -29,7 +32,7 @@ int sendToPort;
 String oscP5event;
 String oscData;
 String host;
-String photoPath; 
+String photoPath;
 
 //----------------------------------------------------------------------------------------------------------------
 
@@ -44,56 +47,67 @@ void setup()
   hint(ENABLE_NATIVE_FONTS);
   smooth();
  
-  //  set up communication channels
+  // set up communication channels
 
-  tuioClient  = new TuioProcessing(this);
+  tuioClient = new TuioProcessing(this);
 
   receiveAtPort = 12345;
   sendToPort = 1234;
   host = "127.0.0.1";
   oscP5event = "oscEvent";
-  oscP5 = new OscP5(this,host, sendToPort,receiveAtPort,oscP5event);  
+  oscP5 = new OscP5(this,host, sendToPort,receiveAtPort,oscP5event);
   myRemoteLocation = new NetAddress(host,sendToPort);
 
-  //  set up custom classes to be displayed as a sequence
+  // set up custom classes to be displayed as a sequence
 
   mySphere = new Sphere();
   myDrawing = new Drawing();
-  myWinners = new Winners(); 
+  myWinners = new Winners();
   myDiagram = new Diagram();
+  myTexts = new Texts();
+  myTutorial = new Tutorial();
 }
 
 //----------------------------------------------------------------------------------------------------------------
 
 void draw()
 {
-  switch(sequence) 
+  switch(sequence)
   {
   case 0:
+    background(112,38,67);
+    myTexts.startText();
     break;
 
   case 1:
-    println("Tutorial video started");  
+    println("Tutorial video started");
     background(0);
+    myTutorial.load();
+    sequence = 2;
     break;
 
   case 2:
-    println("Drawing started");
-    fill(0,5);  //  do not refresh, slow fading out
-    noStroke();
-    rect(0,0,width,height);       
-    myDrawing.display();
+    //background(0);
+    myTutorial.display();
     break;
     
   case 3:
-    fill(0,5);  //  do not refresh, slow fading out
+    println("Drawing started");
+    fill(0,5); // do not refresh, slow fading out
     noStroke();
-    rect(0,0,width,height);       
+    rect(0,0,width,height);
+    myDrawing.display();
+    break;
+    
+  case 4:
+    fill(0,5); // do not refresh, slow fading out
+    noStroke();
+    rect(0,0,width,height);
     myDrawing.display();
     myDiagram.display();
     break;
 
-  case 4:
+  case 5:
     background(0);
     println("Read photos...");
     fileNames = listFileNames(sketchPath + "/data/" + photoPath + "/loosers", txtFilter);
@@ -104,47 +118,47 @@ void draw()
     {
       nodes[i] = new Node(i, sketchPath + "/data/" + photoPath + "/loosers/" + fileNames[i]);
     }
-    sequence = 5; //  run only once, jump to next case
+    sequence = 6; // run only once, jump to next case
     break;
   
-  case 5: 
+  case 6:
     background(0);
     println("Display photo sphere");
     mySphere.display();
     break;
 
-  case 6:
+  case 7:
     background(0);
     println("Displaying winners");
-    winnerfileNames = listFileNames(sketchPath + "/data/" + photoPath + "/winners/",  winnertxtFilter);
+    winnerfileNames = listFileNames(sketchPath + "/data/" + photoPath + "/winners/", winnertxtFilter);
     for (int i = 0; i < winnerfileNames.length; i++)
     {
       myWinners.load(sketchPath + "/data/" + photoPath + "/winners/" + winnerfileNames[i]);
     }
-    sequence = 7; //  run only once, jump to next case
+    sequence = 8; // run only once, jump to next case
     break;
    
-  case 7:
+  case 8:
     background(0);
-    myWinners.display(); 
+    myWinners.display();
   }
 }
 
 //----------------------------------------------------------------------------------------------------------------
-//  SEQUENCING EVENTS WITH KEYS
+// SEQUENCING EVENTS WITH KEYS
 
 void keyPressed()
 {
-  if (key == CODED) 
+  if (key == CODED)
   {
-    if (keyCode == UP) 
+    if (keyCode == UP)
     {
       sequence--;
-    } 
-    else if (keyCode == DOWN) 
+    }
+    else if (keyCode == DOWN)
     {
       sequence++;
-    } 
+    }
     else
     {
       
@@ -153,15 +167,15 @@ void keyPressed()
 }
 
 //----------------------------------------------------------------------------------------------------------------
-//  SEQUENCING EVENTS WITH INCOMING OSC DATA
+// SEQUENCING EVENTS WITH INCOMING OSC DATA
 
 
 void oscEvent(OscMessage theOscMessage)
 {
   if(theOscMessage.checkAddrPattern("/FACES_SAVED")==true)
-  {  
+  {
       oscData = theOscMessage.addrPattern();
-      sequence = 4; //  display photoSphere
+      sequence = 5; // display photoSphere
       println(oscData);
       
       String Value = theOscMessage.get(0).stringValue(); // get the third osc argument
@@ -174,7 +188,7 @@ void oscEvent(OscMessage theOscMessage)
  if(theOscMessage.checkAddrPattern("/START_THE_GAME")==true)
  {
       oscData = theOscMessage.addrPattern();
-      sequence = 1; //  start tutorial video
+      sequence = 1; // start tutorial video
       println(oscData);
       
       OscMessage myMessage = new OscMessage(oscData);
@@ -182,5 +196,3 @@ void oscEvent(OscMessage theOscMessage)
       return;
  }
 }
-
-
