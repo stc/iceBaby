@@ -13,7 +13,6 @@ import javax.media.opengl.*;
 import TUIO.*;
 import oscP5.*;
 import netP5.*;
-import jmcvideo.*;
 
 TuioProcessing tuioClient;
 
@@ -21,8 +20,6 @@ Sphere mySphere;
 Drawing myDrawing;
 Winners myWinners;
 Diagram myDiagram;
-Texts myTexts;
-Tutorial myTutorial;
 
 OscP5 oscP5;
 NetAddress myRemoteLocation;
@@ -64,8 +61,6 @@ void setup()
   myDrawing = new Drawing();
   myWinners = new Winners(); 
   myDiagram = new Diagram();
-  myTexts = new Texts();
-  myTutorial = new Tutorial();
 }
 
 //----------------------------------------------------------------------------------------------------------------
@@ -75,23 +70,14 @@ void draw()
   switch(sequence) 
   {
   case 0:
-    background(112,38,67);
-    myTexts.startText();
     break;
 
   case 1:
-    println("Tutorial video started"); 
+    println("Tutorial video started");  
     background(0);
-    myTutorial.load();
-    sequence = 2;
     break;
 
   case 2:
-    //background(0);
-    myTutorial.display();
-    break;
-    
-  case 3:
     println("Drawing started");
     fill(0,5);  //  do not refresh, slow fading out
     noStroke();
@@ -99,7 +85,7 @@ void draw()
     myDrawing.display();
     break;
     
-  case 4:
+  case 3:
     fill(0,5);  //  do not refresh, slow fading out
     noStroke();
     rect(0,0,width,height);       
@@ -107,7 +93,7 @@ void draw()
     myDiagram.display();
     break;
 
-  case 5:
+  case 4:
     background(0);
     println("Read photos...");
     fileNames = listFileNames(sketchPath + "/data/" + photoPath + "/loosers", txtFilter);
@@ -118,16 +104,16 @@ void draw()
     {
       nodes[i] = new Node(i, sketchPath + "/data/" + photoPath + "/loosers/" + fileNames[i]);
     }
-    sequence = 6; //  run only once, jump to next case
+    sequence = 5; //  run only once, jump to next case
     break;
   
-  case 6: 
+  case 5: 
     background(0);
     println("Display photo sphere");
     mySphere.display();
     break;
 
-  case 7:
+  case 6:
     background(0);
     println("Displaying winners");
     winnerfileNames = listFileNames(sketchPath + "/data/" + photoPath + "/winners/",  winnertxtFilter);
@@ -135,10 +121,10 @@ void draw()
     {
       myWinners.load(sketchPath + "/data/" + photoPath + "/winners/" + winnerfileNames[i]);
     }
-    sequence = 8; //  run only once, jump to next case
+    sequence = 7; //  run only once, jump to next case
     break;
    
-  case 8:
+  case 7:
     background(0);
     myWinners.display(); 
   }
@@ -175,7 +161,7 @@ void oscEvent(OscMessage theOscMessage)
   if(theOscMessage.checkAddrPattern("/FACES_SAVED")==true)
   {  
       oscData = theOscMessage.addrPattern();
-      sequence = 5; //  display photoSphere
+      sequence = 4; //  display photoSphere
       println(oscData);
       
       String Value = theOscMessage.get(0).stringValue(); // get the third osc argument
