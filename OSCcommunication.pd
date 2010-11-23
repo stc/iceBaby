@@ -1,0 +1,18 @@
+#N canvas 882 186 450 300 10;
+#X obj 67 245 sendOSC;
+#X msg 24 93 disconnect;
+#X obj 338 239 print;
+#X text 175 155 SEND THE DATA;
+#X text 331 109 RECEIVE THE DATA;
+#X text 27 48 1 click here;
+#X text 89 154 2 click here;
+#X text 27 29 0 open OSCcommunication.pde within Processing;
+#X msg 25 71 connect localhost 12345;
+#X obj 338 143 dumpOSC 1234;
+#X msg 99 128 send /START_THE_GAME;
+#X msg 89 177 send /FACES_SAVED faces/2010;
+#X connect 1 0 0 0;
+#X connect 8 0 0 0;
+#X connect 9 0 2 0;
+#X connect 10 0 0 0;
+#X connect 11 0 0 0;
