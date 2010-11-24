@@ -9,12 +9,7 @@ class Tutorial
 {
   Tutorial()
   {
-//<<<<<<< HEAD
     myMovie = movieFromDataPath("axis.mov");
-//=======
-    myMovie = movieFromDataPath("axis.mov"); 
-//>>>>>>> 756528003ad97d2001b2137d43112023e25a1b46
-    
   }
   
   void load()
