@@ -9,11 +9,11 @@ class Tutorial
 {
   Tutorial()
   {
-<<<<<<< HEAD
+//<<<<<<< HEAD
     myMovie = movieFromDataPath("axis.mov");
-=======
+//=======
     myMovie = movieFromDataPath("axis.mov"); 
->>>>>>> 756528003ad97d2001b2137d43112023e25a1b46
+//>>>>>>> 756528003ad97d2001b2137d43112023e25a1b46
     
   }
   
@@ -26,11 +26,9 @@ class Tutorial
   {
    PGraphicsOpenGL pgl = (PGraphicsOpenGL) g;
 
-<<<<<<< HEAD
+
     GL gl = pgl.beginGL();
-=======
-    GL gl = pgl.beginGL();  
->>>>>>> 756528003ad97d2001b2137d43112023e25a1b46
+   
   {
     if (pvw != width || pvh != height)
     {
@@ -67,20 +65,9 @@ JMCMovieGL movieFromURL(String urlname)
   catch(Exception e)
   {
     println("URL error...");
-<<<<<<< HEAD
+
   }
-=======
-  } 
->>>>>>> 756528003ad97d2001b2137d43112023e25a1b46
 
   return new JMCMovieGL(this, url, RGB);
 }
 
-
-
-
-
-<<<<<<< HEAD
-=======
-
->>>>>>> 756528003ad97d2001b2137d43112023e25a1b46
