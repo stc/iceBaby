@@ -33,7 +33,7 @@ class Tutorial
       pvh = height;
     }
     //myMovie.alpha = 20f/255f;
-    myMovie.image(gl, 20, 30, myMovie.width, myMovie.height);
+    myMovie.image(gl, 120, 100, myMovie.width, myMovie.height);
   }
   pgl.endGL();
   }

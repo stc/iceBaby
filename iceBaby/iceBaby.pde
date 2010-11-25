@@ -32,14 +32,14 @@ int sendToPort;
 String oscP5event;
 String oscData;
 String host;
-String photoPath;
+String photoPath = "faces/2010";
 ArrayList photos;
 
 //----------------------------------------------------------------------------------------------------------------
 
 void setup()
 {
-  size(800,600,OPENGL);
+  size(1024,768,OPENGL);
   
   // set up display & opengl settings
 
