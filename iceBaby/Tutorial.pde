@@ -36,6 +36,19 @@ class Tutorial
     myMovie.image(gl, 120, 100, myMovie.width, myMovie.height);
   }
   pgl.endGL();
+  
+ // text to be written
+  
+    fill(106,208,243);
+    rect(0,height-50,width,height-50); 
+    gl=((PGraphicsOpenGL)g).beginGL();
+    gl.glClear(GL.GL_DEPTH_BUFFER_BIT);
+    ((PGraphicsOpenGL)g).endGL();
+    fill(255);
+    translate(0,0,1);
+    text("bevezető animáció", 50, height-20);
+    
+  
   }
 }
 

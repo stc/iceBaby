@@ -79,7 +79,7 @@ void draw()
   switch(sequence)
   {
   case 0:
-    background(112,38,67);
+    background(106,208,243);
     myTexts.startText();
     break;
 
@@ -94,27 +94,34 @@ void draw()
     //background(0);
     myTutorial.display();
     break;
-    
+  
   case 3:
+    //background(0);
+    myDrawing.load();
+    sequence = 4;
+    break;
+    
+  case 4:
     println("Drawing started");
-    fill(0,5); // do not refresh, slow fading out
+    fill(106,208,243,20); // do not refresh, slow fading out
     noStroke();
     rect(0,0,width,height);
     myDrawing.display();
     break;
     
-  case 4:
-    fill(0,5); // do not refresh, slow fading out
+  case 5:
+    fill(106,208,243,5); // do not refresh, slow fading out
     noStroke();
     rect(0,0,width,height);
     myDrawing.display();
     myDiagram.display();
     break;
 
-  case 5:
+  case 6:
     background(0);
     println("Read photos...");
     fileNames = listFileNames(sketchPath + "/data/" + photoPath + "/loosers", txtFilter);
+    println(fileNames);
     
     NODE_NUM = fileNames.length;
     nodes = new Node[NODE_NUM];
@@ -122,16 +129,17 @@ void draw()
     {
        nodes[i] = new Node(i, sketchPath + "/data/" + photoPath + "/loosers/" + fileNames[i]);
     }
-    sequence = 6; // run only once, jump to next case
+    sequence = 7; // run only once, jump to next case
     break;
   
-  case 6:
+  case 7:
     background(0);
     println("Display photo sphere");
     mySphere.display();
+    myTexts.sorsolas();
     break;
 
-  case 7:
+  case 8:
     background(0);
     println("Displaying winners");
     winnerfileNames = listFileNames(sketchPath + "/data/" + photoPath + "/winners/", winnertxtFilter);
@@ -141,10 +149,10 @@ void draw()
       photos.add(sketchPath + "/data/" + photoPath + "/winners/" + winnerfileNames[i]);    
       myWinners.load(photos);
     }
-    sequence = 8; // run only once, jump to next case
+    sequence = 9; // run only once, jump to next case
     break;
    
-  case 8:
+  case 9:
     background(0);
     myWinners.display();
   }
@@ -181,7 +189,7 @@ void oscEvent(OscMessage theOscMessage)
   if(theOscMessage.checkAddrPattern("/FACES_SAVED")==true)
   {
       oscData = theOscMessage.addrPattern();
-      sequence = 5; // display photoSphere
+      sequence = 6; // display photoSphere
       println(oscData);
       
       String Value = theOscMessage.get(0).stringValue(); // get the third osc argument
