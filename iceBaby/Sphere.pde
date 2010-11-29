@@ -4,9 +4,8 @@
 
 Node[] nodes;
 int NODE_NUM = 100;
-float R = 150.0;
+float R = 0;
 String looserpath;
-PImage winPic;
 
 class Sphere 
 {
@@ -28,7 +27,7 @@ int id;
 
 class Node
 {
-  
+  private PImage winPic;
   float _x, _y, _z;
   
   float lat, lon;
@@ -38,14 +37,12 @@ class Node
   Node(int ID, String _path)
   { 
     id = ID;
-    looserpath = _path;
-    
+    looserpath = _path;    
     lat = random(0, TWO_PI);
     lon = random(0, PI);
     dlat = random(0, TWO_PI) * speed;
     dlon = random(0, PI) * speed;
     winPic = loadImage(looserpath);
-   
   }
   
   public void moveMe()
@@ -72,6 +69,7 @@ class Node
     ellipse(0,0,75, 75);
     translate(-30,-30,0);
     tint(255,z+100);
+    imageMode(CORNERS);
     image(winPic,0,0,60,60);
     popMatrix();
     }

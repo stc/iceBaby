@@ -9,6 +9,15 @@ float scale_factor = 1;
 PFont font;
 
 
+//  variables for easing
+
+float _sx=0;
+float _sy=0;
+float _ex=0;
+float _ey=0;
+float speed = 1.8;
+
+
 class Drawing 
 {
 
@@ -20,7 +29,7 @@ class Drawing
 
   void load()
   {
-    fill(106,208,243,255); // do not refresh, slow fading out
+    fill(106,208,243,255);
     noStroke();
     rect(0,0,width,height);
   }
@@ -62,32 +71,29 @@ class Drawing
         {
           TuioPoint end_point = (TuioPoint)pointList.elementAt(j);
           strokeWeight(1);
-          stroke(255,20);
-          line(start_point.getScreenX(width),start_point.getScreenY(height),end_point.getScreenX(width),end_point.getScreenY(height));
+          stroke(255,10);
+          
+          //  easing:
+          
+          float endStartX = start_point.getScreenX(width);
+          float endStartY = start_point.getScreenY(height);
+          _sx += (endStartX - _sx) / speed;
+          _sy += (endStartY - _sy) / speed;
+           
+          float endEndX = end_point.getScreenX(width);
+          float endEndY = end_point.getScreenY(height);
+          _ex += (endEndX - _ex) / speed;
+          _ey += (endEndY - _ey) / speed;
+           strokeWeight(2);
+           line(_sx,_sy,_ex,_ey);
+           stroke(86,123,178,10);
+           
+          line(_sx-1,_sy-1,_ex-1,_ey-1);  
+          //line(start_point.getScreenX(width),start_point.getScreenY(height),end_point.getScreenX(width),end_point.getScreenY(height));
           start_point = end_point;
-        }
-
-        strokeWeight(4);
-        //stroke(0,120,112);
-        noStroke();
-        fill(255,200,0);  
-        
-        float _x = tcur.getScreenX(width);
-        float __x = (5*_x+tcur.getScreenX(width))/6;
-        float _y = tcur.getScreenY(height);
-        float __y = (5*_y+tcur.getScreenY(height))/6;
-        ellipse(__x, __y,cur_size,cur_size);
-        //text(""+ tcur.getCursorID(),  tcur.getScreenX(width)-5,  tcur.getScreenY(height)+5);
-
-        fill(255,255,255,255);  
-        ellipse(tcur.getScreenX(width), tcur.getScreenY(height),cur_size-1,cur_size-1);
-        GL gl=((PGraphicsOpenGL)g).beginGL();
-        gl.glClear(GL.GL_DEPTH_BUFFER_BIT);
-        ((PGraphicsOpenGL)g).endGL();
-        fill(106,208,243);
-        rect(0,height-80,width,height-80); 
+        } 
       }
-    }
+    }   
   }
 }
 

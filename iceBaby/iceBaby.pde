@@ -14,6 +14,7 @@ import TUIO.*;
 import oscP5.*;
 import netP5.*;
 import jmcvideo.*;
+import de.looksgood.ani.*;
 
 TuioProcessing tuioClient;
 
@@ -23,6 +24,7 @@ Winners myWinners;
 Diagram myDiagram;
 Texts myTexts;
 Tutorial myTutorial;
+Gfx myGfx;
 
 OscP5 oscP5;
 NetAddress myRemoteLocation;
@@ -34,6 +36,8 @@ String oscData;
 String host;
 String photoPath = "faces/2010";
 ArrayList photos;
+
+int fadeDraw = 255;
 
 //----------------------------------------------------------------------------------------------------------------
 
@@ -67,9 +71,14 @@ void setup()
   mySphere = new Sphere();
   myDrawing = new Drawing();
   myWinners = new Winners();
-  myDiagram = new Diagram();
+  myDiagram = new Diagram(0,height-200,width,200);
   myTexts = new Texts();
   myTutorial = new Tutorial();
+  myGfx = new Gfx();
+  
+  //  setup tweening library
+  
+  Ani.init(this);
 }
 
 //----------------------------------------------------------------------------------------------------------------
@@ -79,49 +88,57 @@ void draw()
   switch(sequence)
   {
   case 0:
-    background(106,208,243);
+    background(255);
+    myGfx.logoMe();
     myTexts.startText();
     break;
-
+   
   case 1:
-    println("Tutorial video started");
-    background(0);
+    background(255);
     myTutorial.load();
     sequence = 2;
     break;
 
   case 2:
-    //background(0);
+    background(255);
     myTutorial.display();
     break;
   
   case 3:
-    //background(0);
-    myDrawing.load();
-    sequence = 4;
+    background(255);
+    myTexts.drawing();
+    myTutorial.stopMe();
     break;
-    
+  
   case 4:
-    println("Drawing started");
-    fill(106,208,243,20); // do not refresh, slow fading out
-    noStroke();
-    rect(0,0,width,height);
-    myDrawing.display();
+    background(255);
+    myDrawing.load();
+    sequence = 5;
     break;
     
   case 5:
-    fill(106,208,243,5); // do not refresh, slow fading out
+    background(106,208,243);
+    myDiagram.display();
+    fadeDraw--;
+    fill(255,fadeDraw); 
     noStroke();
     rect(0,0,width,height);
+    break;
+    
+  case 6:
     myDrawing.display();
     myDiagram.display();
     break;
-
-  case 6:
-    background(0);
-    println("Read photos...");
+    
+  case 7:
+    myDrawing.display();
+    myDiagram.display();
+    myTexts.sorsolas();
+    break;
+    
+  case 8:
+    background(255);
     fileNames = listFileNames(sketchPath + "/data/" + photoPath + "/loosers", txtFilter);
-    println(fileNames);
     
     NODE_NUM = fileNames.length;
     nodes = new Node[NODE_NUM];
@@ -129,32 +146,44 @@ void draw()
     {
        nodes[i] = new Node(i, sketchPath + "/data/" + photoPath + "/loosers/" + fileNames[i]);
     }
-    sequence = 7; // run only once, jump to next case
+    R = 0;
+    sequence = 9;
     break;
   
-  case 7:
-    background(0);
-    println("Display photo sphere");
+  case 9:
+    background(106,208,243);
+    myDiagram.display();
     mySphere.display();
-    myTexts.sorsolas();
+    myTexts.nyertes();
+    fadeDraw=0;
     break;
 
-  case 8:
-    background(0);
-    println("Displaying winners");
+  case 10:
+    background(106,208,243);
+    myDiagram.display();
+    mySphere.display();
+    myTexts.nyertes();
+    fadeDraw++;
+    fill(255,fadeDraw);
+    rect(0,0,width,height);
+    break;
+    
+  case 11:
+    background(255);
     winnerfileNames = listFileNames(sketchPath + "/data/" + photoPath + "/winners/", winnertxtFilter);
     for (int i = 0; i < winnerfileNames.length; i++)
-    {
-      
+    {  
       photos.add(sketchPath + "/data/" + photoPath + "/winners/" + winnerfileNames[i]);    
       myWinners.load(photos);
     }
-    sequence = 9; // run only once, jump to next case
+    sequence = 12; // run only once, jump to next case
     break;
    
-  case 9:
-    background(0);
+  case 12:
+    background(255);
+    imageMode(CORNER);
     myWinners.display();
+    myTexts.congrat();
   }
 }
 
@@ -173,9 +202,19 @@ void keyPressed()
     {
       sequence++;
     }
+    else if (keyCode == LEFT)
+    {
+      Ani.to(this, 1.5, "logoPos", width/2, Ani.BOUNCE_OUT);
+      Ani.to(this, 4.5, "titlePos", height/2, Ani.QUART_OUT); 
+    }
+    else if (keyCode == RIGHT)
+    {
+      Ani.to(this, 0.5, "logoPos", width+500, Ani.QUART_IN);
+      Ani.to(this, 1.5, "titlePos", height+500, Ani.QUART_IN);
+      Ani.to(this, 1.5, "R", 150, Ani.BOUNCE_OUT);
+    }
     else
     {
-      
     }
   }
 }
@@ -189,10 +228,10 @@ void oscEvent(OscMessage theOscMessage)
   if(theOscMessage.checkAddrPattern("/FACES_SAVED")==true)
   {
       oscData = theOscMessage.addrPattern();
-      sequence = 6; // display photoSphere
+      sequence = 6;
       println(oscData);
       
-      String Value = theOscMessage.get(0).stringValue(); // get the third osc argument
+      String Value = theOscMessage.get(0).stringValue(); 
       println(Value);
       photoPath = Value;
       OscMessage myMessage = new OscMessage(oscData);
@@ -210,3 +249,4 @@ void oscEvent(OscMessage theOscMessage)
       return;
  }
 }
+
