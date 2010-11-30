@@ -38,15 +38,17 @@ String photoPath = "faces/2010";
 ArrayList photos;
 
 int fadeDraw = 255;
+int GLOBAL_COUNT;
+boolean time;
+
 
 //----------------------------------------------------------------------------------------------------------------
 
 void setup()
 {
-  size(1024,768,OPENGL);
-  
   // set up display & opengl settings
-
+  
+  size(1024,768,OPENGL);
   hint(ENABLE_OPENGL_4X_SMOOTH);
   hint(ENABLE_DEPTH_SORT);
   hint(ENABLE_NATIVE_FONTS);
@@ -79,18 +81,85 @@ void setup()
   //  setup tweening library
   
   Ani.init(this);
+  
+  //  Set global counter for sequencing animations
+ 
+  GLOBAL_COUNT = 0;
+  time = true;
+   
 }
 
 //----------------------------------------------------------------------------------------------------------------
 
 void draw()
 {
+  
+  
+  
+  if(time)
+  {
+    GLOBAL_COUNT +=1;
+  }
+  else
+  {
+    GLOBAL_COUNT +=0;
+  }
+  
+  if(counter == 200) GLOBAL_COUNT +=1;
+  
+  //  SEQUENCING STATES
+  
+  switch(GLOBAL_COUNT)
+  {
+    case 10:
+      sequence = 0;
+      animIntro();
+      break;
+      
+    case 400:
+      animIntroOut(); 
+      break;
+    
+    case 500:
+      sequence = 1;  //  tutorial video
+      break;
+      
+    case 800:
+      sequence = 3;  // drawing text with cubes
+      break;
+      
+    case 1500:
+      sequence = 4;  //  drawing starts here
+      break;
+      
+    case 1700:
+      sequence = 7;
+      break;
+      
+    case 1750:
+      sequence = 8;  //  photoSphere
+      break;
+      
+    case 2500:
+      sequence = 10;  //  display winners
+      break;
+      
+    case 3100:
+      sequence = 13;  // drawing again
+      break;
+  }
+  
+  
+  //  STATE SWITCHES
+
+
   switch(sequence)
   {
   case 0:
     background(255);
     myGfx.logoMe();
     myTexts.startText();
+   
     break;
    
   case 1:
@@ -107,6 +176,7 @@ void draw()
   case 3:
     background(255);
     myTexts.drawing();
+    myGfx.fallingCubes();
     myTutorial.stopMe();
     break;
   
@@ -123,6 +193,7 @@ void draw()
     fill(255,fadeDraw); 
     noStroke();
     rect(0,0,width,height);
+    if(fadeDraw == 0) sequence = 6; // wait for fading, then move on
     break;
     
   case 6:
@@ -134,6 +205,7 @@ void draw()
     myDrawing.display();
     myDiagram.display();
     myTexts.sorsolas();
+    time = false;
     break;
     
   case 8:
@@ -147,11 +219,13 @@ void draw()
        nodes[i] = new Node(i, sketchPath + "/data/" + photoPath + "/loosers/" + fileNames[i]);
     }
     R = 0;
+    animSphere();
     sequence = 9;
     break;
   
   case 9:
     background(106,208,243);
+    myGfx.fallingCubes();
     myDiagram.display();
     mySphere.display();
     myTexts.nyertes();
@@ -166,6 +240,7 @@ void draw()
     fadeDraw++;
     fill(255,fadeDraw);
     rect(0,0,width,height);
+    if(fadeDraw == 255)sequence = 11;
     break;
     
   case 11:
@@ -184,8 +259,38 @@ void draw()
     imageMode(CORNER);
     myWinners.display();
     myTexts.congrat();
+    break;
+    
+  case 13:
+    background(30);
+    sequence = 14;
+    break;
+  
+  case 14:
+    myDrawing.display();
   }
 }
+
+//----------------------------------------------------------------------------------------------------------------
+// SEQUENCED FUNCTIONS TO BE CALLED BY GLOBAL COUNT
+
+void animIntro()
+{
+  Ani.to(this, 1.5, "logoPos", width/2, Ani.BOUNCE_OUT);
+  Ani.to(this, 4.5, "titlePos", height/2, Ani.QUART_OUT); 
+}
+
+void animIntroOut()
+{
+  Ani.to(this, 0.5, "logoPos", width+500, Ani.QUART_IN);
+  Ani.to(this, 1.5, "titlePos", height+500, Ani.QUART_IN);
+}
+
+void animSphere()
+{
+  Ani.to(this, 1.5, "R", 150, Ani.BOUNCE_OUT);
+}
+
 
 //----------------------------------------------------------------------------------------------------------------
 // SEQUENCING EVENTS WITH KEYS
@@ -228,7 +333,8 @@ void oscEvent(OscMessage theOscMessage)
   if(theOscMessage.checkAddrPattern("/FACES_SAVED")==true)
   {
       oscData = theOscMessage.addrPattern();
-      sequence = 6;
+      //sequence = 6;
+      facesReady = true;
       println(oscData);
       
       String Value = theOscMessage.get(0).stringValue(); 
@@ -241,7 +347,8 @@ void oscEvent(OscMessage theOscMessage)
  if(theOscMessage.checkAddrPattern("/START_THE_GAME")==true)
  {
       oscData = theOscMessage.addrPattern();
-      sequence = 1; // start tutorial video
+      //sequence = 1; // start tutorial video
+      GLOBAL_COUNT = 0;
       println(oscData);
       
       OscMessage myMessage = new OscMessage(oscData);
@@ -249,4 +356,5 @@ void oscEvent(OscMessage theOscMessage)
       return;
  }
 }
+
 

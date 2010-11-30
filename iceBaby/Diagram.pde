@@ -8,6 +8,8 @@ int ySize;
 PFont diagramfont;
 PFont percentfont;
 
+boolean facesReady = false;
+
 class Diagram
 {
   Diagram(int _xPos, int _yPos, int _xSize, int _ySize)
@@ -40,7 +42,19 @@ class Diagram
         strokeWeight(1);
         noFill();
         
-        counter += random(1)/3 - 0.14;
+        counter += random(1)/3 - 0.05;
+        
+        if (!facesReady) 
+        {
+          if (counter>100) counter = 100; 
+        }
+        
+        if (facesReady)
+        {
+          if (counter > 200) counter = 200;
+          
+        }
+        
         stroke(255,200);
         line(xPos,yPos+ySize/2,xPos+xSize,yPos+ySize/2);
         line(xPos,yPos+15,xPos+xSize,yPos+15);
@@ -68,9 +82,9 @@ class Diagram
      text("50%", xPos+10, yPos+ySize/2-5);
      float percent = counter + sin(counter)*3-1.5;
      textFont(percentfont);
-     fill(100);
-     text(int(percent/2) + "%",xSize-70+3,height-percent+3);
+     fill(10);
+     text(int(percent/2 + 3) + "%",xSize-70+3,height-percent+3);
      fill(255); 
-     text(int(percent/2) + "%",xSize-70,height-percent);  
+     text(int(percent/2 + 3) + "%",xSize-70,height-percent);  
     }
 }
